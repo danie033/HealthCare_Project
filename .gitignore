@@ -12,4 +12,5 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Environment variables
-.env
+.envData/final_data.csv
+sql/medicare_db.sql
