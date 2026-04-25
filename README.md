@@ -1,195 +1,128 @@
+# 📊 Project Setup & Execution Guide
 
-# 🏥 Medicare Part B Charge Prediction (2013–2023)
+## 1. Environment Setup
 
-## 📌 Overview
+First, create and activate a virtual environment to manage dependencies.
 
-This project aims to build a machine learning model to predict **Average Submitted Charge (`Avg_Sbmtd_Chrg`)** using Medicare Part B datasets (2013–2023) from CMS.
+```bash
+# Create virtual environment
+python -m venv venv
 
-These datasets contain provider-level service and billing information across the United States. The model helps estimate expected charges for procedures across regions, supporting:
+# Activate it
+# On macOS/Linux:
+source venv/bin/activate
 
-* Cost analysis
-* Anomaly detection (over/under charging)
-* Healthcare policy insights
-
----
-
-## 🎯 Objectives
-
-* Build a scalable data pipeline for large healthcare datasets
-* Develop and evaluate machine learning models
-* Analyze key drivers of healthcare costs
-* Enable predictions such as:
-
-  > *“What is the expected average submitted charge for a given year, state, HCPCS code, etc..?”*
-
----
-
-## 📊 Dataset
-
-**Source:** CMS Medicare Physician & Other Practitioners Dataset
-🔗 [https://data.cms.gov/provider-summary-by-type-of-service/medicare-physician-other-practitioners/medicare-physician-other-practitioners-by-geography-and-service/data](https://data.cms.gov/provider-summary-by-type-of-service/medicare-physician-other-practitioners/medicare-physician-other-practitioners-by-geography-and-service/data)
-
-### Dataset Characteristics
-
-* 200,000+ rows per year
-* Provider-level aggregated data
-* Covers years 2013–2023
-
-### Features Used
-
-* `Rndrng_Prvdr_Geo_Cd` – Geographic code
-* `HCPCS_Cd` – Procedure code
-* `HCPCS_Drug_Ind` – Drug indicator
-* `Place_Of_Srvc` – Service location
-* `Tot_Rndrng_Prvdrs` – Total providers
-* `Tot_Benes` – Total beneficiaries
-* `Tot_Srvcs` – Total services
-* `Tot_Bene_Day_Srvcs` – Beneficiary-day services
-
-### 🎯 Target Variable
-
-* `Avg_Sbmtd_Chrg` – Average submitted charge
-
----
-
-## 🏗️ Project Architecture
-
+# On Windows:
+venv\Scripts\activate
 ```
-Raw CSV Data (CMS)
-        ↓
-PySpark Data Ingestion & Cleaning
-        ↓
-Storage (PostgreSQL / Parquet)
-        ↓
-Feature Engineering Pipeline
-        ↓
-Machine Learning Models
-        ↓
-Evaluation & Visualization
+
+Next, install the required packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+If you encounter missing dependencies while running the notebooks, install them inside the virtual environment:
+
+```bash
+pip install <package_name>
 ```
 
 ---
 
-## ⚙️ Tech Stack
+## 2. Data Preparation (`clean_data.ipynb`)
 
-* **Data Processing:** PySpark
-* **Storage:** PostgreSQL / Parquet
-* **ML Libraries:** Scikit-learn, XGBoost, LightGBM
-* **Visualization:** Matplotlib, Seaborn
-* **Languages:** Python
+### Step 1: Download Raw Data
 
----
+Download the **11 CSV files (2013–2023)** from the CMS website:
 
-## 🔄 Methodology
+https://data.cms.gov/provider-summary-by-type-of-service/medicare-physician-other-practitioners/medicare-physician-other-practitioners-by-geography-and-service
 
-### 1. Data Engineering
-
-* Load CSVs into PySpark
-* Standardize schema across years
-* Handle missing/invalid data
-* Add `year` column
-* Store cleaned data
-
-### 2. Data Storage
-
-* Normalize schema (fact + dimension tables)
-* Create unified analytical view
-* Optimize for scalability
-
-### 3. Feature Engineering
-
-* Encode categorical variables (One-hot / Target encoding)
-* Scale numerical features (if needed)
-* Optional: log-transform target
-* Remove redundant features
-
-### 4. Modeling
-
-Models evaluated:
-
-* Linear Models (Ridge, Lasso)
-* Decision Tree
-* Random Forest
-* Gradient Boosting (XGBoost, LightGBM)
-
-### 5. Evaluation
-
-Metrics:
-
-* RMSE
-* MAE
-* R² Score
-
-Validation:
-
-* Time-based split (train on past, test on future)
-* Cross-validation
-
-### 6. Analysis & Visualization
-
-* Distribution plots
-* Correlation analysis
-* Feature importance
-* Residual/error analysis
-* PCA visualization
+Place all downloaded CSV files into a single folder on your machine.
 
 ---
 
-## 👥 Team Responsibilities
+### Step 2: Configure Environment Variables
 
-### 🔧 Data Engineering (Person 1)
+Create a `.env` file in the project root directory and specify the path to your data folder:
 
-* Data ingestion & preprocessing
-* Schema design
-* Pipeline development
+```env
+DATA_PATH=/path/to/your/csv/folder
+```
 
-### 🤖 ML Engineering (Person 2)
+Example:
 
-* Feature engineering
-* Model training & tuning
-* Evaluation
-
-### 📈 Data Analysis (Person 3)
-
-* EDA & visualization
-* Error analysis
-* Reporting insights
+```env
+DATA_PATH=/Users/yourname/data/medicare_csvs
+```
 
 ---
 
-## 🚀 Expected Outcomes
+### Step 3: Run Data Cleaning Notebook
 
-* Accurate model for predicting healthcare charges
-* Insights into cost drivers (procedures, geography, services)
-* Scalable and reusable data pipeline
+Open and run:
 
----
+```
+clean_data.ipynb
+```
 
-## 🔮 Future Improvements
+This notebook will:
 
-* Add provider-level or demographic datasets
-* Deploy model as API (Flask/FastAPI)
-* Implement anomaly detection system
-* Explore deep learning approaches
-
----
-
-## 📌 Key Insight
-
-Healthcare charge data is often:
-
-* Highly skewed
-* Strongly influenced by procedure codes
-* Variable across time
-
-➡️ Best performance is expected from:
-
-* Log-transformed targets
-* Gradient boosting models
-* Time-aware validation
+* Load all CSV files (2013–2023) name each file by its year, for example 2015.csv for the year 2015.
+* Clean and preprocess the data
+* Output a final cleaned dataset for model training
 
 ---
 
-## 📄 License
+## 3. Model Training (`training_models.ipynb`)
 
-This project uses publicly available CMS data. Please follow CMS data usage guidelines.
+### ⚠️ Important Requirement
+
+This notebook must be run on the **University of Utah CHPC (Center for High Performance Computing)**.
+
+---
+
+### Step 1: Download Cleaned Dataset
+
+Before running the training notebook, use:
+
+```
+downloaderCHPC.py
+```
+
+This script downloads the cleaned dataset generated from `clean_data.ipynb`.
+
+
+---
+
+### Step 2: Adjust Dataset Size (Optional)
+
+Inside `training_models.ipynb`, you can control how much data is used:
+
+* Default: **5% of dataset**
+* Optional: Increase up to **100%** (depending on available resources)
+
+---
+
+### Step 3: Run Training Notebook
+
+Execute:
+
+```
+training_models.ipynb
+```
+
+This will:
+
+* Load the cleaned dataset
+* Train machine learning models
+* Output results and performance metrics
+
+⏱️ Expected runtime: **15–20 minutes**
+---
+
+## 4. Notes
+
+* Always activate your virtual environment before running the notebooks.
+* Running the full dataset (100%) may require significant computational resources.
+* Ensure all scripts (`downloaderCHPC.py`, notebooks, `.env`) are in the same project directory.
