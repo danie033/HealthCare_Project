@@ -68,9 +68,9 @@ clean_data.ipynb
 
 This notebook will:
 
-* Load all CSV files (2013–2023) name each file by its year, for example 2015.csv for the year 2015.
-* Clean and preprocess the data
-* Output a final cleaned dataset for model training
+- Load all CSV files (2013–2023) name each file by its year, for example 2015.csv for the year 2015.
+- Clean and preprocess the data
+- Output a final cleaned dataset for model training
 
 ---
 
@@ -92,15 +92,14 @@ downloaderCHPC.py
 
 This script downloads the cleaned dataset generated from `clean_data.ipynb`.
 
-
 ---
 
 ### Step 2: Adjust Dataset Size (Optional)
 
 Inside `training_models.ipynb`, you can control how much data is used:
 
-* Default: **5% of dataset**
-* Optional: Increase up to **100%** (depending on available resources)
+- Default: **5% of dataset**
+- Optional: Increase up to **100%** (depending on available resources)
 
 ---
 
@@ -114,15 +113,18 @@ training_models.ipynb
 
 This will:
 
-* Load the cleaned dataset
-* Train machine learning models
-* Output results and performance metrics
+- Load the cleaned dataset
+- Train machine learning models
+- Output results and performance metrics
 
-⏱️ Expected runtime: **15–20 minutes**
----
+## ⏱️ Expected runtime: **15–20 minutes**
 
 ## 4. Notes
 
-* Always activate your virtual environment before running the notebooks.
-* Running the full dataset (100%) may require significant computational resources.
-* Ensure all scripts (`downloaderCHPC.py`, notebooks, `.env`) are in the same project directory.
+- Always activate your virtual environment before running the notebooks.
+- Running the full dataset (100%) may require significant computational resources.
+- Ensure all scripts (`downloaderCHPC.py`, notebooks, `.env`) are in the same project directory.
+
+## Analysis
+
+All analysis & evaluation of the model is within the `analysis.ipynb` notebook. Ensure the models are trained first by running through the `training_models.ipynb` notebook and then proceed with the analysis notebook.
